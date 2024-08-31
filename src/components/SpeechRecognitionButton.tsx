@@ -1,7 +1,12 @@
 import { useEffect, useMemo } from "react"
 
 
-const SpeechRecognitionButton = ({ onAddTask, onRemoveTask }) => {
+interface SpeechRecognitionButtonProps {
+    onAddTask: (task: string) => void;
+    onRemoveTask: any;
+}
+
+const SpeechRecognitionButton = ({ onAddTask, onRemoveTask }: SpeechRecognitionButtonProps) => {
     const SpeechRecognition: any = useMemo(() => {
         if ('webkitSpeechRecognition' in window) {
             //@ts-ignore
