@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react"
 
 
 const SpeechRecognitionButton = ({ onAddTask, onRemoveTask }) => {
-    const SpeechRecognition = useMemo(() => {
+    const SpeechRecognition: any = useMemo(() => {
         if ('webkitSpeechRecognition' in window) {
             //@ts-ignore
             return new window.webkitSpeechRecognition();
@@ -12,17 +12,23 @@ const SpeechRecognitionButton = ({ onAddTask, onRemoveTask }) => {
             return null;
         }
     }, [])
+    
 
     useEffect(() => {
+        if (!SpeechRecognition) {
+            console.error("Speech Recognition is not supported in this browser.");
+            return;
+        }
+
         SpeechRecognition.onstart = (res) => console.log("arrancamos!");
         SpeechRecognition.onend = (res) => console.log("terminamos!");
 
 
-        SpeechRecognition.onerror = (event) => {
+        SpeechRecognition.onerror = (event: ErrorEvent) => {
             console.error('Error occurred in recognition:', event.error);
           };
 
-        SpeechRecognition.onresult = (event) => {
+        SpeechRecognition.onresult = (event: { results: SpeechRecognitionResultList; }) => {
             const result: string = event.results[0][0].transcript;
 
             if(result.toLowerCase().startsWith("agregar")){
@@ -34,12 +40,19 @@ const SpeechRecognitionButton = ({ onAddTask, onRemoveTask }) => {
             console.log(result);
         }
 
-        return () => SpeechRecognition.abort()
-    },[])
+        return () => {
+            SpeechRecognition.abort();
+            SpeechRecognition.onstart = null;
+            SpeechRecognition.onend = null;
+            SpeechRecognition.onerror = null;
+            SpeechRecognition.onresult = null;
+        }
+    },[SpeechRecognition, onAddTask ])
 
     const startRecognition = () => {
         SpeechRecognition.start();        
     }
+
 
     return <> 
      <button style={{ width: "100px", height: "100px"}} onClick={startRecognition}> Record </button>     

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.css';
 import ToDoList from './components/ToDoList';
 import SpeechRecognitionButton from './components/SpeechRecognitionButton';
 import SpeechReadButton from './components/SpeechReadButton';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<string[]>([]);
 
-  const onAddTask = (task: string) => {
+  const onAddTask = useCallback((task: string) => {
     setTasks((prevState) => [...prevState, task]);
-  }
+  }, [setTasks]);
 
   console.log(tasks);
 
