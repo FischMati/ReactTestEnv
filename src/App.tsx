@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import ToDoList from './components/ToDoList';
+import SpeechRecognitionButton from './components/SpeechRecognitionButton';
+import SpeechReadButton from './components/SpeechReadButton';
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+
+  const onAddTask = (task: string) => {
+    setTasks((prevState) => [...prevState, task]);
+  }
+
+  console.log(tasks);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section id='todo'>
+        <ToDoList tasks={tasks} />
+        <SpeechRecognitionButton onAddTask={onAddTask} onRemoveTask={() => {}} />
+        <SpeechReadButton tasks={tasks} />
+      </section>
     </div>
   );
 }
